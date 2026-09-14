@@ -4,9 +4,7 @@
 \usepackage{polyglossia}
 \setmainlanguage[numerals=maghrib]{arabic}
 \setotherlanguage{english}
-\newfontfamily\arabicfont[Script=Arabic,Scale=1.05]{Amiri}
-\newfontfamily\arabicfonttt{Latin Modern Mono}
-\newfontfamily\arabicfontsf[Script=Arabic,Scale=1.05]{Amiri}
+\input{../arabic-fonts.tex}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{algorithm,algpseudocode}
 \usepackage{booktabs,graphicx,tikz}
@@ -34,7 +32,7 @@
 \begin{abstract}
 تقدّم هذه الورقة الجامعة بناءً وتحليلًا وتنفيذًا وتقييمًا تجريبيًا لعائلة
 من طرائق الرتبة الثانية تتمحور حول خوارزمية
-«نيوتن التكعيبي الخالي من السرج ذي البعد الديناميكي المتكيف»
+"نيوتن التكعيبي الخالي من السرج ذي البعد الديناميكي المتكيف"
 \textenglish{(DA-SFCN)}.
 تجمع الخوارزمية الأم ثلاث ركائز كانت متفرقة في الأدبيات:
 (1) فضاء كريلوف موجَّه طيفيًا يُبنى بعملية \textenglish{Lanczos} من
@@ -103,7 +101,7 @@ $O(n^3)$. وتستبدل طرائق نيوتن غير الدقيقة والفض�
 \subsection{المساهمات}
 \begin{itemize}
 \item \textbf{الخوارزمية.} نحدّد \textenglish{DA-SFCN} حتى التفاصيل
-العددية (إعادة التعامد، الحل السканتي، تنظيم \textenglish{ARC}، الجدولة
+العددية (إعادة التعامد، المعادلة السكانتية، تنظيم \textenglish{ARC}، الجدولة
 اللوغاريتمية).
 \item \textbf{النظرية.} معدل عالمي $O(k^{-2/3})$ مستقل عن $\{m_k\}$؛
 تقارب تربيعي محلي بشرط أدنى لوغاريتمي على $m_k$؛ مبرهنة تنازل للنموذج

@@ -1,9 +1,9 @@
-\documentclass[12pt,a4paper]{article}
+﻿\documentclass[12pt,a4paper]{article}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{fontspec,polyglossia}
 \setmainlanguage[numerals=maghrib]{arabic}
 \setotherlanguage{english}
-\newfontfamily\arabicfont[Script=Arabic,Scale=1.05]{Amiri}
+\input{../arabic-fonts.tex}
 \usepackage{amsmath,graphicx,algorithm,algpseudocode,hyperref}
 \graphicspath{{../../figures/}}
 \title{\textbf{SC-Newton: نيوتن تكعيبي بشهادة طيفية}\\
@@ -65,7 +65,7 @@ $m_k$. وعالميًا $m_k\ge 1$ فيبقى $O(k^{-2/3})$.
 \textenglish{SC-Newton} عضو القطع التكيفي في العائلة. يُستخدم عندما يتناقص
 طيف الهيسيان (سروج، لوجستي، تحليل مصفوفات)؛ ويُقرن بمهيئ \textenglish{L-BFGS}
 من \textenglish{WQK-Newton} عندما لا يتناقص (روزنبروك). ومع جدولة
-\textenglish{DA-SFCN} نقدّم إجابتين متكاملتين لسؤال «كم يجب أن يكون $m$؟».
+\textenglish{DA-SFCN} نقدّم إجابتين متكاملتين لسؤال "كم يجب أن يكون $m$؟".
 
 \begin{english}
 \begin{thebibliography}{9}
