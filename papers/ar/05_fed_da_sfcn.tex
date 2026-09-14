@@ -1,0 +1,66 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{fontspec,polyglossia}
+\setmainlanguage[numerals=maghrib]{arabic}
+\setotherlanguage{english}
+\newfontfamily\arabicfont[Script=Arabic,Scale=1.05]{Amiri}
+\usepackage{amsmath,graphicx,algorithm,algpseudocode,hyperref}
+\graphicspath{{../../figures/}}
+\title{\textbf{Fed-DA-SFCN: نيوتن تكعيبي فيدرالي خالٍ من السرج}\\
+\large ذو بعد ديناميكي}
+\author{الورقة 5 من 6 --- مجموعة التحسين العددي}
+\date{سبتمبر 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+تنفّذ \textenglish{Fed-DA-SFCN} $E$ خطوات \textenglish{DA-SFCN} محلية لدى
+كل عميل مختار ثم تُوسِّط النماذج على الخادم بنمط \textenglish{FedAvg}.
+الخطوات المحلية ترى $f_c$ الخاصة عبر تدرّجها وجداء هيسيانها، فيرث كل عميل
+هروبًا تكعيبيًا خاليًا من السرج دون إرسال أي هيسيان. على مسألة لوجستية غير
+محدبة مقسومة على ثمانية عملاء تبلغ 25 جولة تواصل
+$\|\nabla f\|\approx 4.3\times 10^{-4}$، مقارنة بـ 40 خطوة تدرّج كامل الدفعة
+($3.0\times 10^{-4}$) وأبطأ حتمًا من \textenglish{DA-SFCN} المركزي
+(5 تكرارات إلى $4\times 10^{-11}$) كما يتنبأ تحليل جوار عدم التجانس.
+\end{abstract}
+
+\section{الإطار}
+البيانات موزَّعة على $C$ عملاء والهدف $f=\frac1C\sum f_c$. إرسال الهيسيانات
+غير واقعي؛ إرسال النماذج بعد بضع خطوات رتبة ثانية محلية واقعي.
+
+\section{الخوارزمية}
+في كل جولة يبث الخادم $x^t$ ويختار مجموعة عملاء. كل عميل يبدأ من $x^t$
+وينفّذ $E$ خطوات \textenglish{DA-SFCN} على $f_c$ ويعيد النموذج. والخادم
+يأخذ المتوسط.
+
+\section{ما يمكن إثباته}
+كل خطوة محلية تخفض $f_c$ بالمقدار التكعيبي للخوارزمية الأم. والمتوسط يولّد
+خطأ انحراف عملاء من رتبة $E$ في النعومة المحلية وعدم التجانس، كما في تحليل
+\textenglish{FedAvg}. النتيجة: تقارب إلى جوار نقطة ثابتة من الرتبة الأولى
+نصف قطره يصغر بتصغير $E$ وزيادة التواصل. الانحناء السالب \emph{المشترك}
+يُفلَت منه محليًا قبل المتوسط؛ وسروج العملاء الخاصة تتوسّط.
+
+\section{التجارب}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.62\textwidth]{fig_fed.pdf}
+\caption{لوجستي فيدرالي غير محدب، $C=8$ عملاء، $E=2$ خطوة محلية لكل جولة.}
+\end{figure}
+
+\textenglish{DA-SFCN} المركزي يبقى المعيار الذهبي إن أمكن تجميع البيانات.
+و\textenglish{Fed-DA-SFCN} العضو الصحيح في العائلة إن لم يمكن. والفجوة بين
+$4\times 10^{-11}$ و$4\times 10^{-4}$ ليست فشلًا للحلّال التكعيبي بل أرضية
+عدم التجانس.
+
+\section{الخاتمة}
+النواة متوافقة مع التواصل: يكفي العميل تدرّج وجداء هيسيان لخسارته الخاصة.
+تخطيط الهيسيان (\textenglish{FedNL}) ترقية طبيعية لورقة لاحقة.
+
+\begin{english}
+\begin{thebibliography}{9}
+\bibitem{mcmahan2017} McMahan et al. FedAvg. \textit{AISTATS}, 2017.
+\bibitem{reddi2021} Reddi et al. FedOpt. \textit{ICLR}, 2021.
+\bibitem{jiang2024} Jiang et al. \textit{AISTATS}, 2024.
+\bibitem{dauphin2014} Dauphin et al. \textit{NeurIPS}, 2014.
+\end{thebibliography}
+\end{english}
+\end{document}
