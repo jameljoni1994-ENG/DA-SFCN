@@ -1,5 +1,9 @@
 # DA-SFCN Family
 
+<p align="center">
+  <img src="assets/dasfcn-banner.png" alt="DA-SFCN — Dynamically-Adaptive Saddle-Free Cubic Newton" width="100%">
+</p>
+
 Dynamically-Adaptive Saddle-Free Cubic Newton and five extensions, with bilingual research papers (English / Arabic), reproducible experiments, and compiled PDFs.
 
 ## Algorithms
@@ -23,6 +27,7 @@ tests/               Fast unit tests (pytest)
 run_experiments.py   Full experiment suite → figures/ + results/
 scripts/repro_smoke.py  Light multi-seed saddle escape + logistic smoke
 figures/             Generated plots (PDF + PNG)
+assets/              Project banner and static images
 results/             Tables, summary.json, repro_smoke.json
 papers/              LaTeX sources (EN/AR) + arabic-fonts.tex
 pdfs/                Canonical compiled PDFs
