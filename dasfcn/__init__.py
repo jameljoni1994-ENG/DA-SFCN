@@ -14,6 +14,7 @@ from .algorithms import (
     SC_Newton,
     RandomSubspaceCubic,
 )
+from .api import available_methods, minimize
 from .problems import (
     Rosenbrock,
     QuadraticSaddle,
@@ -24,6 +25,8 @@ from .problems import (
 )
 
 __all__ = [
+    "minimize",
+    "available_methods",
     "DA_SFCN",
     "KrylovCRN",
     "SaddleFreeNewton",

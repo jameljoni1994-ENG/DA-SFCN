@@ -36,7 +36,8 @@ $names = @(
     "03_lk_newton.tex",
     "04_wqk_newton.tex",
     "05_fed_da_sfcn.tex",
-    "06_sc_newton.tex"
+    "06_sc_newton.tex",
+    "07_empirical_results.tex"
 )
 foreach ($f in $names) {
     Compile-PdfLatex $f (Join-Path $root "papers\en") | Out-Null
@@ -48,12 +49,13 @@ Copy-Item (Join-Path $root "papers\unified\paper_en.pdf") (Join-Path $pdfs "00_u
 Copy-Item (Join-Path $root "papers\unified\paper_ar.pdf") (Join-Path $pdfs "00_unified_AR.pdf") -Force
 
 $map = @{
-    "01_da_sfcn.pdf"      = "01_DA-SFCN"
-    "02_vr_da_sfcn.pdf"   = "02_VR-DA-SFCN"
-    "03_lk_newton.pdf"    = "03_LK-Newton"
-    "04_wqk_newton.pdf"   = "04_WQK-Newton"
-    "05_fed_da_sfcn.pdf"  = "05_Fed-DA-SFCN"
-    "06_sc_newton.pdf"    = "06_SC-Newton"
+    "01_da_sfcn.pdf"             = "01_DA-SFCN"
+    "02_vr_da_sfcn.pdf"          = "02_VR-DA-SFCN"
+    "03_lk_newton.pdf"           = "03_LK-Newton"
+    "04_wqk_newton.pdf"          = "04_WQK-Newton"
+    "05_fed_da_sfcn.pdf"         = "05_Fed-DA-SFCN"
+    "06_sc_newton.pdf"           = "06_SC-Newton"
+    "07_empirical_results.pdf"   = "07_Results"
 }
 foreach ($src in $map.Keys) {
     $en = Join-Path $root "papers\en\$src"

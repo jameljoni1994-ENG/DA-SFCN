@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: If you use this software, please cite the DA-SFCN monograph and this repository.
+title: "DA-SFCN: Dynamically-Adaptive Saddle-Free Cubic Newton Family"
+type: software
+authors:
+  - name: "DA-SFCN contributors"
+repository-code: "https://github.com/jameljoni1994-ENG/DA-SFCN"
+url: "https://github.com/jameljoni1994-ENG/DA-SFCN"
+license: MIT
+version: "0.1.0"
+date-released: "2026-09-15"
+abstract: >-
+  Reference implementation of Dynamically-Adaptive Saddle-Free Cubic Newton
+  (DA-SFCN) and extensions (VR, lazy Krylov, L-BFGS warm start, federated,
+  spectral certificate), with bilingual research papers and reproducible
+  CPU-friendly experiments.
+keywords:
+  - nonconvex optimization
+  - cubic Newton
+  - Krylov subspace
+  - saddle-free Newton
+preferred-citation:
+  type: article
+  title: "The DA-SFCN Family: Dynamically Adaptive Saddle-Free Cubic Newton"
+  authors:
+    - name: "Numerical Optimization Group"
+  year: 2026
+  notes: "See papers/unified/ in the repository"

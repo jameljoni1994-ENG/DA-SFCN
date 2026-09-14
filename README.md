@@ -18,29 +18,47 @@ Theory for the parent method: global rate `O(k^{-2/3})` (any `m_k ≥ 1`) and lo
 ## Repository layout
 
 ```
-dasfcn/              Python package (algorithms, problems, Lanczos/cubic core)
-run_experiments.py   Experiment suite → figures/ + results/
+dasfcn/              Python package (algorithms, API, optional torch HVP)
+tests/               Fast unit tests (pytest)
+run_experiments.py   Full experiment suite → figures/ + results/
+scripts/repro_smoke.py  Light multi-seed saddle escape + logistic smoke
 figures/             Generated plots (PDF + PNG)
-results/             Tables and summary.json
-papers/
-  unified/           Full bilingual monographs (LaTeX)
-  en/                Per-algorithm papers (English)
-  ar/                Per-algorithm papers (Arabic)
-  refs.bib
-pdfs/                Canonical compiled PDFs (ready to read / share)
-scripts/             Build helpers
-docs/                Research plan and notes
+results/             Tables, summary.json, repro_smoke.json
+papers/              LaTeX sources (EN/AR) + arabic-fonts.tex
+pdfs/                Canonical compiled PDFs
+docs/OPTIMIZER.md    Living contribution roadmap
+CONTRIBUTING.md      How to contribute
+LICENSE / CITATION.cff
 ```
+
+## Roadmap
+
+Strategic ideas and prioritized contributions (device-aware) live in **[docs/OPTIMIZER.md](docs/OPTIMIZER.md)**.  
+Contribution rules: **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
 ## Quick start
 
 ```bash
-# Python 3.10+ (on Windows use: py -3)
-pip install -r requirements.txt
-py -3 run_experiments.py
+# Python 3.10+ (on Windows: py -3)
+pip install -e ".[dev]"
+pytest -q
+py -3 scripts/repro_smoke.py
 ```
 
-Plots are written to `figures/`; numeric summaries to `results/summary.json`.
+Unified API:
+
+```python
+from dasfcn import minimize
+from dasfcn.problems import QuadraticSaddle
+
+prob = QuadraticSaddle(n=40, n_neg=6)
+tr = minimize(prob, prob.x0(0), method="da-sfcn", maxiter=40)
+print(tr.grad_norm[-1], tr.n_hvp[-1])
+```
+
+Optional PyTorch CPU HVP helper: `pip install -e ".[torch]"` then see `dasfcn/torch_backend.py`.
+
+Full plot suite (heavier): `py -3 run_experiments.py`.
 
 ### Compile papers
 
@@ -58,11 +76,12 @@ Outputs are collected under `pdfs/`.
 |------|---------|
 | `pdfs/00_unified_EN.pdf` / `_AR.pdf` | Full family monograph |
 | `pdfs/01_DA-SFCN_*.pdf` … `06_SC-Newton_*.pdf` | One paper per algorithm |
+| `pdfs/07_Results_EN.pdf` / `_AR.pdf` | Empirical results report (tables + figures) |
 
 ## Citation
 
-If you use this code or the papers, please cite the DA-SFCN monograph in `papers/unified/` (September 2026).
+Please cite this repository (`CITATION.cff`) and the DA-SFCN monograph in `papers/unified/` (September 2026).
 
 ## License
 
-Research / academic use. Add an explicit license file if you redistribute publicly.
+MIT — see [LICENSE](LICENSE).
