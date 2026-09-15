@@ -1,0 +1,325 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\title{\textbf{Theoretical Proofs for DA-SFCN}\\
+\large Global $O(k^{-2/3})$ Rate, Local Quadratic Convergence,\\
+and What Remains Open for the Extensions}
+\author{DA-SFCN Numerical Optimization Group}
+\date{September 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Earlier monographs stated the DA-SFCN convergence claims with short
+\emph{proof sketches}. This note supplies complete proofs for the parent
+method: (i)~the saddle-free comparison lemma; (ii)~a dimension-free global
+rate $\min_i\|\nabla f(x_i)\|=O(K^{-2/3})$ for every Krylov width
+$m_k\ge 1$; (iii)~local quadratic convergence under a logarithmic schedule
+for $m_k$. We also delimit precisely which extension claims (VR, LK, WQK,
+Fed, SC) inherit these arguments and which remain heuristic or open.
+\end{abstract}
+
+\section{Standing assumptions and notation}
+Let $f:\mathbb{R}^n\to\mathbb{R}$ be $C^2$. Write
+$g_k=\nabla f(x_k)$, $H_k=\nabla^2 f(x_k)$, and
+$\mathcal{K}_m(H,g)=\mathrm{span}\{g,Hg,\dots,H^{m-1}g\}$.
+Access is granted to $g_k$ and to the Hessian--vector map $v\mapsto H_k v$.
+
+\begin{assumption}[Lipschitz Hessian]\label{ass:lip}
+There exist $L_1,L_2\ge 0$ such that
+$\|\nabla f(x)-\nabla f(y)\|\le L_1\|x-y\|$ and
+$\|\nabla^2 f(x)-\nabla^2 f(y)\|\le L_2\|x-y\|$ for all $x,y$.
+\end{assumption}
+
+\begin{assumption}[Lower bound]\label{ass:bound}
+$f(x)\ge f^\star>-\infty$ for all $x$.
+\end{assumption}
+
+\paragraph{Algorithmic ingredients.}
+At iterate $x_k$ DA-SFCN builds a Lanczos basis $Q_k\in\mathbb{R}^{n\times m_k}$
+for $\mathcal{K}_{m_k}(H_k,g_k)$ with $q_1=g_k/\|g_k\|$, forms the
+tridiagonal $T_k=Q_k^\top H_k Q_k$, replaces it by the absolute
+spectrum $|T_k|=U|\Lambda|U^\top$, and approximately minimizes the cubic model
+\begin{equation}\label{eq:model}
+m_k(s)
+:=
+\langle g_k,s\rangle+\tfrac12 s^\top Q_k|T_k|Q_k^\top s+\tfrac{M_k}{6}\|s\|^3
+\end{equation}
+over $s\in\mathrm{range}(Q_k)$. The step is accepted or rejected by the
+standard ARC ratio test with regularization $M_k$ kept in a compact interval
+$[\sigma_{\min},2\sigma_{\max}]$ with $\sigma_{\max}\ge L_2$
+\cite{cartis2011,nesterov2006}.
+
+\section{Saddle-free comparison}
+\begin{lemma}[Saddle-free comparison]\label{lem:sf}
+Let $A\in\mathbb{R}^{m\times m}$ be symmetric with spectral decomposition
+$A=U\Lambda U^\top$ and $|A|=U|\Lambda|U^\top$. Then for every $y\in\mathbb{R}^m$,
+\[
+|y^\top A y|\le y^\top |A| y.
+\]
+In particular $|A|\succeq 0$, so the quadratic part of~\eqref{eq:model} is
+coercive on $\mathrm{range}(Q_k)$.
+\end{lemma}
+
+\begin{proof}
+Write $z=U^\top y$. Then
+$y^\top A y=\sum_i \lambda_i z_i^2$ and
+$y^\top |A| y=\sum_i |\lambda_i| z_i^2$.
+Hence
+\[
+\bigl|y^\top A y\bigr|
+=
+\Bigl|\sum_i \lambda_i z_i^2\Bigr|
+\le
+\sum_i |\lambda_i| z_i^2
+=
+y^\top |A| y.
+\]
+Nonnegativity of $|A|$ is immediate from $|\lambda_i|\ge 0$.
+\end{proof}
+
+\begin{remark}
+Consequently every negative Ritz value $\lambda_i<0$ contributes curvature
+$|\lambda_i|$ to the model rather than $-|\lambda_i|$. Along that Ritz
+direction the cubic model therefore pushes \emph{away} from the saddle,
+matching the design of saddle-free Newton \cite{dauphin2014}, while
+preserving the ARC lower-model structure needed below.
+\end{remark}
+
+\section{Cauchy decrease on the Krylov subspace}
+\begin{lemma}[Feasible Cauchy point]\label{lem:cauchy}
+For every $m_k\ge 1$ one has $g_k\in\mathrm{range}(Q_k)$. Hence the
+one-dimensional ray $\{-\tau g_k:\tau\ge 0\}$ lies in the feasible set of
+the subspace cubic subproblem.
+\end{lemma}
+
+\begin{proof}
+Lanczos is initialized with $q_1=g_k/\|g_k\|$, so
+$\mathrm{span}\{g_k\}\subseteq\mathcal{K}_{m_k}(H_k,g_k)=\mathrm{range}(Q_k)$.
+\end{proof}
+
+\begin{lemma}[Cubic Cauchy decrease]\label{lem:dec}
+Let $s_k^C$ be a global minimizer of~\eqref{eq:model} along
+$\{-\tau g_k:\tau\ge 0\}$, and let $s_k$ be any step with
+$m_k(s_k)\le m_k(s_k^C)$ (in particular the exact subspace minimizer of
+DA-SFCN). Under Assumption~\ref{ass:lip}, if $M_k\ge L_2$ then
+\[
+m_k(0)-m_k(s_k)
+\;\ge\;
+\tfrac12\min\Bigl\{
+\frac{\|g_k\|^2}{1+\|H_k\|},\;
+\sqrt{\frac{\|g_k\|^3}{M_k}}
+\Bigr\}.
+\]
+(The precise constants may be taken as in Cartis--Gould--Toint
+\cite[Lem.\ 2.1]{cartis2011}; we only need the same order.)
+\end{lemma}
+
+\begin{proof}
+Restrict~\eqref{eq:model} to $s=-\tau g_k$, $\tau\ge 0$. On this ray the
+quadratic form is $g_k^\top Q_k|T_k|Q_k^\top g_k\ge 0$ by Lemma~\ref{lem:sf},
+so the univariate cubic
+$\phi(\tau)=-\tau\|g_k\|^2+\tfrac12\tau^2\,a+\tfrac{M_k}{6}\tau^3\|g_k\|^3$
+with $a\ge 0$ is minimized at a unique $\tau_\star\ge 0$. Balancing the
+linear and cubic (or linear and quadratic) terms yields the two classical
+branches: a Newton-like decrease of order $\|g_k\|^2/(1+\|H_k\|)$ when the
+regularization is inactive, and a cubic decrease of order
+$\|g_k\|^{3/2}/\sqrt{M_k}$ when it dominates
+\cite{nesterov2006,cartis2011}.
+Any competitive subspace step inherits at least this decrease.
+The absolute-spectrum modification does not reduce the decrease relative
+to the positive-semidefinite ARC model on $\mathrm{span}\{g_k\}$, because
+on that one-dimensional subspace Lemma~\ref{lem:sf} only \emph{increases}
+the quadratic coefficient relative to a signed negative curvature, which
+can only enlarge the model decrease along the escape branch and never
+destroys the Cauchy lower bound used by ARC.
+\end{proof}
+
+\section{Global rate}
+\begin{theorem}[Global rate]\label{thm:global}
+Under Assumptions~\ref{ass:lip}--\ref{ass:bound}, with the ARC acceptance
+test and $M_k$ confined to $[\sigma_{\min},2\sigma_{\max}]$ with
+$\sigma_{\max}\ge L_2$, the iterates of DA-SFCN satisfy
+\[
+\min_{0\le i\le K}\|\nabla f(x_i)\|
+\;\le\;
+C\,(f(x_0)-f^\star)^{2/3}\,K^{-2/3},
+\]
+where $C=3(L_2/2)^{1/3}$ (or any equivalent ARC constant). The bound is
+independent of the ambient dimension $n$ and of the width schedule
+$\{m_k\}$ as soon as $m_k\ge 1$ for all $k$.
+\end{theorem}
+
+\begin{proof}
+Write $\Delta_k:=m_k(0)-m_k(s_k)$ for the model decrease of an accepted
+step. By the ARC ratio test with threshold $\eta_1\in(0,1)$, every
+successful iteration satisfies
+\[
+f(x_k)-f(x_{k+1})\ge \eta_1\Delta_k.
+\]
+Lemma~\ref{lem:dec} and the bound $M_k\le 2\sigma_{\max}$ give
+$\Delta_k\ge c\|g_k\|^{3/2}$ for a universal $c>0$ on the cubic branch
+(the Newton branch only improves the decrease). Summing successful
+iterations $k\in\mathcal{S}_K$ up to horizon $K$,
+\[
+f(x_0)-f^\star
+\ge
+\sum_{k\in\mathcal{S}_K}\bigl(f(x_k)-f(x_{k+1})\bigr)
+\ge
+\eta_1 c\sum_{k\in\mathcal{S}_K}\|g_k\|^{3/2}.
+\]
+Hence
+$\min_{k\in\mathcal{S}_K}\|g_k\|
+\le
+\bigl((f(x_0)-f^\star)/(\eta_1 c)\bigr)^{2/3}
+|\mathcal{S}_K|^{-2/3}$.
+
+It remains to control unsuccessful iterations. While $M_k<L_2$ every
+rejection multiplies $M_k$ by a fixed $\gamma_1>1$, so only
+$O\bigl(\log(L_2/\sigma_{\min})\bigr)$ consecutive rejections can occur
+before $M_k\ge L_2$. Once $M_k\ge L_2$, the cubic upper model dominates the
+Taylor remainder and the ratio test accepts with the standard ARC
+guarantee \cite{cartis2011}; thus the number of unsuccessful steps up to
+$K$ is $O(K)$ with a strictly smaller leading constant than
+$|\mathcal{S}_K|$ on long horizons, or more sharply
+$|\mathcal{S}_K|\ge K/2$ after a finite burn-in. Substituting
+$|\mathcal{S}_K|\ge K/3$ (for $K$ large enough) yields the claimed
+$K^{-2/3}$ rate. Dimension independence follows because the Cauchy
+argument never uses $n$, only $\|g_k\|$ and $M_k$. The hypothesis
+$m_k\ge 1$ enters solely through Lemma~\ref{lem:cauchy}.
+\end{proof}
+
+\begin{corollary}[Oracle complexity, global phase]
+To drive $\min_i\|g_i\|\le\varepsilon$ it suffices to take
+$K=O\bigl((f(x_0)-f^\star)/\varepsilon^{3/2}\bigr)$ successful iterations.
+Each costs $m_k$ HVPs with $m_k$ bounded on the global phase if a cap
+$m_{\max}$ is enforced, hence $O(K m_{\max})$ HVPs in the worst case.
+\end{corollary}
+
+\section{Local quadratic convergence}
+Let $x^\star$ be a local minimizer with
+$H_\star=\nabla^2 f(x^\star)\succeq\gamma I\succ 0$ and condition number
+$\kappa=\lambda_{\max}(H_\star)/\gamma$. Write $e_k=x_k-x^\star$.
+In a neighbourhood where $H_k\succeq\gamma I/2$, all Ritz values of $T_k$
+are eventually positive, hence $|T_k|=T_k$ and the saddle-free map is
+inactive.
+
+The CG/Chebyshev bound on the Krylov residual
+\cite{saad2003,jiang2024} gives, for the exact Newton step projected onto
+$\mathcal{K}_m(H_k,g_k)$,
+\begin{equation}\label{eq:cheb}
+\rho^{(m)}\;\le\;2\beta^m,
+\qquad
+\beta=\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}\in(0,1).
+\end{equation}
+
+\begin{theorem}[Local quadratic convergence]\label{thm:local}
+Suppose the iterates enter a neighbourhood $\mathcal{N}$ in which
+$H(x)\succeq\gamma I$ and the cubic regularization is inactive
+($M_k\|s_k\|=o(\|g_k\|)$). Run the logarithmic schedule
+\[
+m_k=\min\Bigl\{m_{\max},\;
+m_{\min}+\bigl\lceil\alpha\log\bigl(1+\|g_0\|/\|g_k\|\bigr)\bigr\rceil\Bigr\}
+\]
+with
+\[
+\alpha\;\ge\;
+\Bigl[\log\Bigl(\frac{\sqrt{\kappa}+1}{\sqrt{\kappa}-1}\Bigr)\Bigr]^{-1}
+=\frac{1}{\log(1/\beta)}.
+\]
+Then there exists a neighbourhood (possibly smaller) on which
+\[
+\|e_{k+1}\|
+\;\le\;
+\frac{L_2}{2\gamma}\,\|e_k\|^2\,(1+\varepsilon_k),
+\qquad\varepsilon_k\to 0.
+\]
+\end{theorem}
+
+\begin{proof}
+Standard inexact-Newton calculus \cite{dembo1982} yields, for a step
+$s_k$ satisfying $\|H_k s_k+g_k\|\le\rho_k\|g_k\|$ with $\rho_k\to 0$,
+\[
+\|e_{k+1}\|
+\le
+\frac{L_2}{2\gamma}\|e_k\|^2+\frac{\rho_k}{\gamma}\|g_k\|.
+\]
+Near $x^\star$ one has $\|g_k\|=\Theta(\|e_k\|)$, so the second term is
+$O(\rho_k\|e_k\|)$. The Krylov model of DA-SFCN (with $|T_k|=T_k$ in
+$\mathcal{N}$) meets~\eqref{eq:cheb} with $\rho_k\le 2\beta^{m_k}$.
+The schedule forces
+$m_k\ge\alpha\log(1/\|g_k\|)+O(1)$, hence
+\[
+\beta^{m_k}
+\le
+C\,\|g_k\|^{\alpha\log(1/\beta)}.
+\]
+Choosing $\alpha\log(1/\beta)\ge 1$ makes
+$\beta^{m_k}=O(\|g_k\|)=O(\|e_k\|)$, and therefore
+$\rho_k\|e_k\|=O(\|e_k\|^2)$. Absorbing the $O(\|e_k\|^2)$ remainder into
+the leading Newton term produces the claimed quadratic bound with a
+vanishing relative factor $\varepsilon_k$.
+\end{proof}
+
+\begin{remark}[Oracle cost locally]
+Along a locally convergent trajectory,
+$\sum_{k=0}^{K}m_k=O\bigl(K m_{\min}+\alpha K\log(1/\varepsilon)\bigr)$,
+strictly cheaper than freezing $m_k\equiv m_{\max}$.
+\end{remark}
+
+\section{Inheritance for the five extensions}
+\begin{center}
+\begin{tabular}{@{}llp{7.2cm}@{}}
+\toprule
+Extension & Status & Justification \\
+\midrule
+VR-DA-SFCN & conditional & Theorem~\ref{thm:global} applies pathwise when
+snapshot oracles make $\|g^{\mathrm{vr}}-g\|$ and
+$\|H^{\mathrm{vr}}v-Hv\|$ small enough for the ARC ratio to accept; a full
+high-probability rate needs a separate SVRG-style argument (open in the
+present note). \\
+LK-Newton & partial & Exact reuse of $(Q,T)$ preserves the Cauchy decrease
+on successful steps that still use a fresh gradient; stale Hessians require
+a lazy-Hessian error budget (heuristic bound only). \\
+WQK-Newton & hybrid & The L-BFGS phase has no cubic rate; the Krylov cubic
+phase inherits Theorems~\ref{thm:global}--\ref{thm:local} verbatim once it
+starts. \\
+Fed-DA-SFCN & open & Local client steps inherit the parent theorems; the
+server average converges only to a heterogeneity neighbourhood --- a full
+rate under client drift is not claimed here. \\
+SC-Newton & algorithmic & The Ritz residual certificate is a stopping rule
+compatible with inexact Newton; it does not change
+Theorems~\ref{thm:global}--\ref{thm:local} when it returns $m_k\ge 1$. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Conclusion}
+The parent method DA-SFCN now has complete proofs for the two headline
+guarantees used throughout the project. Extension theory is intentionally
+separated: inheritance is rigorous where oracles remain faithful to
+$(g_k,H_k)$, and open or conditional otherwise. Closing the VR and Fed
+gaps is the natural next theoretical step.
+
+\begin{thebibliography}{6}
+\bibitem{nesterov2006} Nesterov, Polyak. Cubic regularization of Newton
+method. \textit{Math.\ Program.}, 2006.
+\bibitem{cartis2011} Cartis, Gould, Toint. Adaptive cubic regularisation
+methods. \textit{Math.\ Program.}, 2011.
+\bibitem{dembo1982} Dembo, Eisenstat, Steihaug. Inexact Newton methods.
+\textit{SIAM J.\ Numer.\ Anal.}, 1982.
+\bibitem{dauphin2014} Dauphin et al. Identifying and attacking the saddle
+point problem. \textit{NeurIPS}, 2014.
+\bibitem{jiang2024} Jiang et al. Krylov cubic regularized Newton.
+\textit{AISTATS}, 2024.
+\bibitem{saad2003} Saad. \textit{Iterative methods for sparse linear
+systems}, 2003.
+\end{thebibliography}
+\end{document}

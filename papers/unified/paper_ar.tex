@@ -210,6 +210,11 @@ $m_k$. ويُكيَّف $M_k$ بأسلوب \textenglish{ARC}.
 اتجاه هروب بانحناء $|\lambda|$.
 \end{lemma}
 
+\begin{proof}
+إذا $A=U\Lambda U^\top$ و$z=U^\top s$ فإن
+$|s^\top A s|=|\sum\lambda_i z_i^2|\le\sum|\lambda_i|z_i^2=s^\top|A|s$.
+\end{proof}
+
 \begin{theorem}[المعدل العالمي]\label{thm:global}
 تحت الافتراضين~\ref{ass:lip}--\ref{ass:bound} وتحديث \textenglish{ARC}
 القياسي لـ $M_k$،
@@ -221,12 +226,33 @@ $m_k$. ويُكيَّف $M_k$ بأسلوب \textenglish{ARC}.
 بثابت مستقل عن $n$ وعن $\{m_k\}$ ما دام $m_k\ge 1$.
 \end{theorem}
 
+\begin{proof}
+تهيئة \textenglish{Lanczos} تجعل $g_k\in\mathrm{range}(Q_k)$ فيبقى شعاع
+كوشي $-\tau g_k$ مقبولًا. على هذا الشعاع يعطي النموذج التكعيبي الخالي من
+السرج تنازلًا من رتبة $\|g_k\|^{3/2}/\sqrt{M_k}$ (أو $\|g_k\|^2$ على فرع
+نيوتن) كما في \textenglish{ARC}. كل تكرار ناجح يحقق
+$f(x_k)-f(x_{k+1})\ge\eta_1\Delta_k$؛ وبالجمع
+$f(x_0)-f^\star\gtrsim\sum\|g_k\|^{3/2}$ فيظهر $K^{-2/3}$.
+الرفضات تضخّم $M_k$ بعدد محدود قبل $M_k\ge L_2$، وتمهيدية~\ref{lem:sf}
+تضمن أن $|T_k|$ لا يفسد حد كوشي على $\mathrm{span}\{g_k\}$.
+إثبات مفصّل في \texttt{papers/ar/08\_theory\_proofs.tex}.
+\end{proof}
+
 \begin{theorem}[التقارب التربيعي المحلي]\label{thm:local}
 إذا دخلت التكرارات جوارًا فيه $H_k\succeq\gamma I$ ونُفِّذت~\eqref{eq:schedule}
 بـ $\alpha\ge[\log((\sqrt{\kappa}+1)/(\sqrt{\kappa}-1))]^{-1}$ فإن
 $\|e_{k+1}\|\le (L_2/(2\gamma))\|e_k\|^2(1+\varepsilon_k)$ مع
 $\varepsilon_k\to 0$. وفي هذا الجوار $|T_k|=T_k$ متى صار طيف ريتز موجبًا.
 \end{theorem}
+
+\begin{proof}
+بحساب نيوتن غير الدقيق:
+$\|e_{k+1}\|\le(L_2/(2\gamma))\|e_k\|^2+(\rho_k/\gamma)\|g_k\|$.
+قرب المصغِّر $\|g_k\|=\Theta(\|e_k\|)$ وحد تشيبيشيف يعطي
+$\rho_k\le 2\beta^{m_k}$. الجدولة اللوغاريتمية تجعل
+$\beta^{m_k}=O(\|e_k\|)$ عند اختيار $\alpha$ أعلاه، فيُمتَص حد البواقي داخل
+الحد التربيعي.
+\end{proof}
 
 \begin{remark}[التعقيد]
 كل تكرار يكلّف $m_k$ جداء هيسيان--متجه وذاكرة $O(nm_k)$ وعملًا كثيفًا

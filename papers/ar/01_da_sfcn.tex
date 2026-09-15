@@ -43,14 +43,27 @@ m_k=\min\bigl\{m_{\max},\,m_{\min}+\lceil\alpha\log(1+\|g_0\|/\|g_k\|)\rceil\big
 \begin{lemma}
 $|s^\top T s|\le s^\top |T|s$؛ فالقيم السالبة تصبح اتجاهات هروب.
 \end{lemma}
+\begin{proof}
+إذا $T=U\Lambda U^\top$ و$z=U^\top s$ فإن
+$|s^\top T s|=|\sum\lambda_i z_i^2|\le\sum|\lambda_i|z_i^2=s^\top|T|s$.
+\end{proof}
 \begin{theorem}
 $\min_{i\le K}\|\nabla f(x_i)\|=O(K^{-2/3})$ مستقلًا عن $n$ وعن $\{m_k\}$
 ما دام $m_k\ge 1$.
 \end{theorem}
+\begin{proof}
+نقطة كوشي على $-\tau g_k$ مقبولة دائمًا في فضاء كريلوف. تنازل
+\textenglish{ARC} من رتبة $\|g_k\|^{3/2}$ يجمع إلى المعدل $K^{-2/3}$.
+التفاصيل: \texttt{pdfs/08\_Theory\_AR.pdf}.
+\end{proof}
 \begin{theorem}
 إذا $H(x^\star)\succeq\gamma I$ و$\alpha$ كبيرًا كفاية فإن
 $\|e_{k+1}\|\le (L_2/(2\gamma))\|e_k\|^2(1+o(1))$.
 \end{theorem}
+\begin{proof}
+نيوتن غير الدقيق + حد تشيبيشيف + جدولة لوغاريتمية لـ $m_k$ تجعل بواقي
+كريلوف $O(\|e_k\|^2)$.
+\end{proof}
 
 \section{التجارب}
 \begin{figure}[h]

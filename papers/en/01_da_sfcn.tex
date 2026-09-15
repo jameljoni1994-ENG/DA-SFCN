@@ -63,16 +63,33 @@ The Hessian is $L_2$-Lipschitz and $f$ is bounded below.
 \begin{lemma}
 $|s^\top T s|\le s^\top |T|s$. Negative Ritz values become escape directions.
 \end{lemma}
+\begin{proof}
+If $T=U\Lambda U^\top$ and $z=U^\top s$ then
+$|s^\top T s|=|\sum\lambda_i z_i^2|\le\sum|\lambda_i|z_i^2=s^\top|T|s$.
+\end{proof}
 \begin{theorem}[Global]
 $\min_{i\le K}\|\nabla f(x_i)\|=O(K^{-2/3})$, independently of $n$ and of
 $\{m_k\}$ as soon as $m_k\ge 1$, because the Cauchy point along $-g_k$ is
 always feasible.
 \end{theorem}
+\begin{proof}
+Lanczos keeps $g_k$ in the Krylov space. The ARC Cauchy decrease on
+$-\tau g_k$ yields $\Delta_k\gtrsim\|g_k\|^{3/2}/\sqrt{M_k}$. Successful
+steps sum to $f(x_0)-f^\star\gtrsim\sum\|g_i\|^{3/2}$, hence the
+$K^{-2/3}$ bound. Absolute spectrum preserves the lower model on
+$\mathrm{span}\{g_k\}$. Full write-up: \texttt{pdfs/08\_Theory\_EN.pdf}.
+\end{proof}
 \begin{theorem}[Local]
 If $H(x^\star)\succeq\gamma I$ and $\alpha\ge 1/\log(1/\beta)$ with
 $\beta=(\sqrt{\kappa}-1)/(\sqrt{\kappa}+1)$, then
 $\|e_{k+1}\|\le (L_2/(2\gamma))\|e_k\|^2(1+o(1))$.
 \end{theorem}
+\begin{proof}
+Inexact Newton:
+$\|e_{k+1}\|\le(L_2/(2\gamma))\|e_k\|^2+\rho^{(m_k)}\|e_k\|$.
+Chebyshev gives $\rho^{(m)}\le 2\beta^m$; the log schedule forces
+$\beta^{m_k}=O(\|e_k\|)$, absorbing the residual into the quadratic term.
+\end{proof}
 
 \section{Experiments}
 Figures~\ref{f1}--\ref{f3} report the implementation in \texttt{dasfcn/}.

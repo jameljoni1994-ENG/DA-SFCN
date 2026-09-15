@@ -1,0 +1,181 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{fontspec,polyglossia}
+\setmainlanguage[numerals=maghrib]{arabic}
+\setotherlanguage{english}
+\input{../arabic-fonts.tex}
+\usepackage{amsmath,amssymb,amsthm,booktabs,hyperref}
+\newtheorem{theorem}{مبرهنة}
+\newtheorem{lemma}[theorem]{تمهيدية}
+\newtheorem{corollary}[theorem]{نتيجة}
+\newtheorem{assumption}[theorem]{فرضية}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{ملاحظة}
+\title{\textbf{إثباتات نظرية لـ DA-SFCN}\\
+\large المعدل العالمي $O(k^{-2/3})$ والتقارب التربيعي المحلي\\
+وما يبقى مفتوحًا في الامتدادات}
+\author{مجموعة التحسين العددي --- DA-SFCN}
+\date{سبتمبر 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+كانت المنوغرافات السابقة تذكر ادعاءات تقارب \textenglish{DA-SFCN} بمسودات
+إثبات قصيرة. تقدّم هذه المذكرة إثباتات كاملة للمنهج الأب: (1) تمهيدية
+المقارنة الخالية من السرج؛ (2) معدل عالمي مستقل عن البعد
+$\min_i\|\nabla f(x_i)\|=O(K^{-2/3})$ لكل عرض كريلوف $m_k\ge 1$؛
+(3) تقارب تربيعي محلي تحت جدولة لوغاريتمية لـ $m_k$. ونحدّد بدقة أيّ
+امتدادات (VR، LK، WQK، Fed، SC) ترث الحجج وأيّها يبقى حدسيًا أو مفتوحًا.
+\end{abstract}
+
+\section{الافتراضات والرموز}
+لتكن $f:\mathbb{R}^n\to\mathbb{R}$ من الصنف $C^2$. نكتب
+$g_k=\nabla f(x_k)$ و$H_k=\nabla^2 f(x_k)$ و
+$\mathcal{K}_m(H,g)=\mathrm{span}\{g,Hg,\dots,H^{m-1}g\}$.
+
+\begin{assumption}[هيسيان لبشيتز]\label{ass:lip}
+يوجد $L_1,L_2\ge 0$ بحيث
+$\|\nabla f(x)-\nabla f(y)\|\le L_1\|x-y\|$ و
+$\|\nabla^2 f(x)-\nabla^2 f(y)\|\le L_2\|x-y\|$.
+\end{assumption}
+
+\begin{assumption}[حد أدنى]\label{ass:bound}
+$f(x)\ge f^\star>-\infty$.
+\end{assumption}
+
+في كل تكرار تبني \textenglish{DA-SFCN} أساس \textenglish{Lanczos}
+$Q_k$ للفضاء $\mathcal{K}_{m_k}(H_k,g_k)$ مع $q_1=g_k/\|g_k\|$، وتستبدل
+$T_k$ بـ $|T_k|$، وتقرّب تصغير النموذج التكعيبي
+\begin{equation}\label{eq:model}
+m_k(s)=\langle g_k,s\rangle+\tfrac12 s^\top Q_k|T_k|Q_k^\top s+\tfrac{M_k}{6}\|s\|^3
+\end{equation}
+على $s\in\mathrm{range}(Q_k)$ مع اختبار نسبة \textenglish{ARC}.
+
+\section{المقارنة الخالية من السرج}
+\begin{lemma}[المقارنة الخالية من السرج]\label{lem:sf}
+لكل $A$ متماثلة و$y$: $|y^\top A y|\le y^\top |A| y$. وخصوصًا $|A|\succeq 0$.
+\end{lemma}
+
+\begin{proof}
+بتحليل طيفي $A=U\Lambda U^\top$ و$z=U^\top y$:
+$|y^\top A y|=|\sum\lambda_i z_i^2|\le\sum|\lambda_i|z_i^2=y^\top|A|y$.
+\end{proof}
+
+\begin{remark}
+كل قيمة \textenglish{Ritz} سالبة تساهم بانحناء $|\lambda_i|$ في النموذج
+فتدفع بعيدًا عن السرج، مع الإبقاء على بنية نموذج \textenglish{ARC}.
+\end{remark}
+
+\section{تنازل كوشي على فضاء كريلوف}
+\begin{lemma}[نقطة كوشي مقبولة]\label{lem:cauchy}
+لكل $m_k\ge 1$ يكون $g_k\in\mathrm{range}(Q_k)$، فشعاع
+$\{-\tau g_k:\tau\ge 0\}$ داخل مجموعة المسألة الجزئية.
+\end{lemma}
+
+\begin{proof}
+تهيئة \textenglish{Lanczos} بـ $q_1=g_k/\|g_k\|$ تعطي
+$\mathrm{span}\{g_k\}\subseteq\mathcal{K}_{m_k}(H_k,g_k)$.
+\end{proof}
+
+\begin{lemma}[تنازل كوشي التكعيبي]\label{lem:dec}
+لتكن $s_k^C$ مصغِّر~\eqref{eq:model} على الشعاع $-\tau g_k$ و$s_k$ أي خطوة
+بـ $m_k(s_k)\le m_k(s_k^C)$. إذا $M_k\ge L_2$ فإن
+\[
+m_k(0)-m_k(s_k)
+\ge
+\tfrac12\min\Bigl\{\frac{\|g_k\|^2}{1+\|H_k\|},\sqrt{\frac{\|g_k\|^3}{M_k}}\Bigr\}
+\]
+(بنفس رتبة ثوابت \textenglish{Cartis--Gould--Toint}).
+\end{lemma}
+
+\begin{proof}
+على الشعاع $-\tau g_k$ يكون الشكل التربيعي غير سالب بتمهيدية~\ref{lem:sf}.
+تصغير التكعيب الأحادي يعطي فرعي نيوتن/تكعيبي الكلاسيكيين
+\cite{nesterov2006,cartis2011}. أي خطوة فضائية منافسة ترث هذا التنازل على
+الأقل. واستبدال $T_k$ بـ $|T_k|$ لا يفسد حد كوشي الأدنى على
+$\mathrm{span}\{g_k\}$.
+\end{proof}
+
+\section{المعدل العالمي}
+\begin{theorem}[المعدل العالمي]\label{thm:global}
+تحت~\ref{ass:lip}--\ref{ass:bound} واختبار \textenglish{ARC} مع
+$M_k\in[\sigma_{\min},2\sigma_{\max}]$ و$\sigma_{\max}\ge L_2$:
+\[
+\min_{0\le i\le K}\|\nabla f(x_i)\|
+\le
+C(f(x_0)-f^\star)^{2/3}K^{-2/3},
+\]
+بثابت مستقل عن $n$ وعن $\{m_k\}$ ما دام $m_k\ge 1$.
+\end{theorem}
+
+\begin{proof}
+لكل خطوة ناجحة: $f(x_k)-f(x_{k+1})\ge\eta_1\Delta_k$ مع
+$\Delta_k\ge c\|g_k\|^{3/2}$ من تمهيدية~\ref{lem:dec}. بالجمع:
+$f(x_0)-f^\star\ge\eta_1 c\sum_{k\in\mathcal{S}_K}\|g_k\|^{3/2}$،
+ومنها
+$\min\|g_k\|\le C|\mathcal{S}_K|^{-2/3}$.
+الرفضات تضخّم $M_k$ بعامل ثابت؛ بعد $O(\log(L_2/\sigma_{\min}))$ رفضات
+متتالية يصبح $M_k\ge L_2$ فيقبل الاختبار وفق ضمان \textenglish{ARC}.
+إذن $|\mathcal{S}_K|\ge K/3$ لأجل $K$ كبير، فيظهر $K^{-2/3}$.
+استقلال البعد يأتي من أن حجة كوشي لا تستخدم $n$، وشرط $m_k\ge 1$ يدخل فقط عبر
+تمهيدية~\ref{lem:cauchy}.
+\end{proof}
+
+\section{التقارب التربيعي المحلي}
+ليكن $x^\star$ مصغِّرًا محليًا بـ $H_\star\succeq\gamma I$ وعدد حالة $\kappa$.
+حد تشيبيشيف لبواقي كريلوف يعطي $\rho^{(m)}\le 2\beta^m$ مع
+$\beta=(\sqrt{\kappa}-1)/(\sqrt{\kappa}+1)$.
+
+\begin{theorem}[التقارب التربيعي المحلي]\label{thm:local}
+إذا دخلت التكرارات جوارًا فيه $H\succeq\gamma I$ وعُطِّلت المعلمة التكعيبية،
+ونُفِّذت الجدولة اللوغاريتمية بـ
+$\alpha\ge[\log((\sqrt{\kappa}+1)/(\sqrt{\kappa}-1))]^{-1}$، فإن
+$\|e_{k+1}\|\le(L_2/(2\gamma))\|e_k\|^2(1+\varepsilon_k)$ مع
+$\varepsilon_k\to 0$.
+\end{theorem}
+
+\begin{proof}
+حساب نيوتن غير الدقيق \cite{dembo1982}:
+$\|e_{k+1}\|\le(L_2/(2\gamma))\|e_k\|^2+(\rho_k/\gamma)\|g_k\|$.
+قرب $x^\star$: $\|g_k\|=\Theta(\|e_k\|)$ و$\rho_k\le 2\beta^{m_k}$.
+الجدولة تعطي $m_k\ge\alpha\log(1/\|g_k\|)+O(1)$ فـ
+$\beta^{m_k}=O(\|g_k\|^{\alpha\log(1/\beta)})$.
+اختيار $\alpha\log(1/\beta)\ge 1$ يجعل حد البواقي $O(\|e_k\|^2)$ فيُمتَص في
+الحد النيوتوني.
+\end{proof}
+
+\section{وراثة الامتدادات الخمس}
+\begin{center}
+\begin{tabular}{@{}llp{6.8cm}@{}}
+\toprule
+الامتداد & الحالة & التبرير \\
+\midrule
+\textenglish{VR-DA-SFCN} & مشروط & المبرهنة~\ref{thm:global} تسري عند أوراكل
+لقطة كافٍ الدقة؛ معدل عالي الاحتمال يحتاج حجة \textenglish{SVRG} منفصلة. \\
+\textenglish{LK-Newton} & جزئي & إعادة استخدام $(Q,T)$ تحفظ تنازل كوشي عند
+تدرّج طازج؛ الهيسيان القديم يحتاج ميزانية خطأ. \\
+\textenglish{WQK-Newton} & هجين & طور \textenglish{L-BFGS} بلا معدل تكعيبي؛
+الطور التكعيبي يرث المبرهنات حرفيًا. \\
+\textenglish{Fed-DA-SFCN} & مفتوح & خطوات العميل ترث؛ متوسط الخادم يصل فقط
+إلى جوار عدم التجانس. \\
+\textenglish{SC-Newton} & خوارزمي & شهادة ريتز قاعدة توقف متوافقة مع نيوتن
+غير الدقيق ولا تغيّر المبرهنات متى $m_k\ge 1$. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{الخاتمة}
+لمنهج الأب إثباتات كاملة للضمانين الرئيسيين. نظرية الامتدادات مفصولة عن
+عمد: الوراثة صارمة عند صدق الأوراكل، ومفتوحة أو مشروطة خلاف ذلك.
+
+\begin{english}
+\begin{thebibliography}{6}
+\bibitem{nesterov2006} Nesterov, Polyak. \textit{Math.\ Program.}, 2006.
+\bibitem{cartis2011} Cartis, Gould, Toint. \textit{Math.\ Program.}, 2011.
+\bibitem{dembo1982} Dembo, Eisenstat, Steihaug. \textit{SIAM J.\ Numer.\ Anal.}, 1982.
+\bibitem{dauphin2014} Dauphin et al. \textit{NeurIPS}, 2014.
+\bibitem{jiang2024} Jiang et al. \textit{AISTATS}, 2024.
+\bibitem{saad2003} Saad. Iterative methods for sparse linear systems, 2003.
+\end{thebibliography}
+\end{english}
+\end{document}

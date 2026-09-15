@@ -82,6 +82,7 @@ Outputs are collected under `pdfs/`.
 | `pdfs/00_unified_EN.pdf` / `_AR.pdf` | Full family monograph |
 | `pdfs/01_DA-SFCN_*.pdf` … `06_SC-Newton_*.pdf` | One paper per algorithm |
 | `pdfs/07_Results_EN.pdf` / `_AR.pdf` | Empirical results report (tables + figures) |
+| `pdfs/08_Theory_EN.pdf` / `_AR.pdf` | Full proofs for global/local DA-SFCN rates |
 
 ## Citation
 

@@ -37,7 +37,8 @@ $names = @(
     "04_wqk_newton.tex",
     "05_fed_da_sfcn.tex",
     "06_sc_newton.tex",
-    "07_empirical_results.tex"
+    "07_empirical_results.tex",
+    "08_theory_proofs.tex"
 )
 foreach ($f in $names) {
     Compile-PdfLatex $f (Join-Path $root "papers\en") | Out-Null
@@ -56,6 +57,7 @@ $map = @{
     "05_fed_da_sfcn.pdf"         = "05_Fed-DA-SFCN"
     "06_sc_newton.pdf"           = "06_SC-Newton"
     "07_empirical_results.pdf"   = "07_Results"
+    "08_theory_proofs.pdf"       = "08_Theory"
 }
 foreach ($src in $map.Keys) {
     $en = Join-Path $root "papers\en\$src"

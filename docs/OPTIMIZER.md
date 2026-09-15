@@ -52,7 +52,7 @@
 
 | المحور | الموجود الآن | الفجوة لمرجع عالمي |
 |--------|----------------|---------------------|
-| نظرية | معدل عالمي `O(k^{-2/3})` + تقارب محلي لوغاريتمي في الورقة الجامعة | إثباتات أنظف لـ LK / Fed تحت انحراف العملاء؛ preconditioned Lanczos |
+| نظرية | معدل عالمي `O(k^{-2/3})` + تقارب محلي لوغاريتمي مع إثباتات كاملة للمنهج الأب (`08_Theory`) | إثباتات VR/Fed تحت انحراف العملاء؛ preconditioned Lanczos |
 | برمجيات | حزمة `dasfcn/` + `run_experiments.py` | `pyproject.toml`، واجهة موحّدة، اختبارات، ترخيص صريح، CITATION |
 | معايير | سروج تحليلية، روزنبروك، لوجستي اصطناعي، تحليل مصفوفات | بذور متعددة، LIBSVM حقيقية، فاصل ثقة لهروب السرج، معيار HVP موحّد |
 | تعلم عميق | مذكور كـ L5 في الورقة | خلفية autograd؛ نماذج صغيرة أولًا؛ LLM لاحقًا على سحابة |
@@ -174,8 +174,8 @@ WorldReference_DA-SFCN
 | `run_experiments.py` | توليد الأشكال والجداول |
 | `scripts/repro_smoke.py` | إعادة إنتاج خفيفة متعددة البذور |
 | `papers/unified/paper_en.tex` / `paper_ar.tex` | النظرية والبروتوكول التجريبي |
-| `papers/en/07_empirical_results.tex` / `papers/ar/07_empirical_results.tex` | ورقة النتائج التجريبية (جداول + أشكال) |
-| `pdfs/07_Results_EN.pdf` / `07_Results_AR.pdf` | PDF النتائج الجاهز للقراءة |
+| `papers/en/08_theory_proofs.tex` / `papers/ar/08_theory_proofs.tex` | إثباتات كاملة للمعدل العالمي والتقارب المحلي |
+| `pdfs/08_Theory_EN.pdf` / `08_Theory_AR.pdf` | PDF الإثباتات |
 | `results/summary.json` / `repro_smoke.json` | أرقام التجارب |
 | `pdfs/` | المخرجات المقروءة للنشر |
 

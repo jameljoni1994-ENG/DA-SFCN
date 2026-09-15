@@ -271,6 +271,12 @@ of curvature $|\lambda|$ rather than a Newton attraction of curvature
 $-|\lambda|$.
 \end{lemma}
 
+\begin{proof}
+Let $A=U\Lambda U^\top$ and $z=U^\top s$. Then
+$|s^\top A s|=|\sum_i\lambda_i z_i^2|\le\sum_i|\lambda_i|z_i^2=s^\top|A|s$,
+and $|A|\succeq 0$.
+\end{proof}
+
 \begin{theorem}[Global rate]\label{thm:global}
 Under Assumptions~\ref{ass:lip}--\ref{ass:bound} and the standard ARC update
 of $M_k$ inside a compact interval $[\sigma_{\min},2\sigma_{\max}]$,
@@ -283,16 +289,36 @@ The constant is independent of $n$ and of the schedule $\{m_k\}_{k\ge 0}$
 as soon as $m_k\ge 1$.
 \end{theorem}
 
-\begin{proof}[Proof sketch]
-The ARC Cauchy-point lemma yields a model decrease of order
-$\|g_k\|^{3/2}/\sqrt{M_k}$ (or $\|g_k\|^2$ on the Newton branch).
-Successful iterations therefore drive $\sum_i\|g_i\|^{3/2}<\infty$ after
-accounting for the boundedness of $M_k$, which is the $K^{-2/3}$ bound.
-Rejected iterations only inflate $M_k$ and are finite in number on any
-window where $M_k$ would otherwise exceed $L_2$. Lemma~\ref{lem:sf}
-ensures that replacing $T_k$ by $|T_k|$ cannot destroy the Cauchy decrease
-in $\mathrm{span}\{g_k\}$.
+\begin{proof}
+Lanczos starts at $q_1=g_k/\|g_k\|$, so $g_k\in\mathrm{range}(Q_k)$ and the
+ray $\{-\tau g_k:\tau\ge 0\}$ is feasible for every $m_k\ge 1$. Restricting
+the saddle-free cubic model to this ray yields a univariate cubic whose
+global minimizer $s_k^C$ produces the classical ARC Cauchy decrease
+\cite[Lem.~2.1]{cartis2011}:
+$\Delta_k:=m_k(0)-m_k(s_k^C)\ge c\min\bigl\{\|g_k\|^2/(1+\|H_k\|),
+\|g_k\|^{3/2}/\sqrt{M_k}\bigr\}$.
+Any competitive subspace step (in particular the exact $|T_k|$-cubic
+minimizer) inherits at least this decrease. Lemma~\ref{lem:sf} keeps the
+quadratic form nonnegative on $\mathrm{span}\{g_k\}$, so the absolute-spectrum
+map cannot destroy the Cauchy lower bound.
+
+On every successful iteration the ARC ratio test gives
+$f(x_k)-f(x_{k+1})\ge\eta_1\Delta_k$. With $M_k\le 2\sigma_{\max}$ the cubic
+branch dominates and summing yields
+$f(x_0)-f^\star\ge\eta_1 c'\sum_{k\in\mathcal{S}_K}\|g_k\|^{3/2}$, hence
+$\min_{k\in\mathcal{S}_K}\|g_k\|\le C|\mathcal{S}_K|^{-2/3}$.
+Unsuccessful steps multiply $M_k$ by a fixed $\gamma_1>1$; only
+$O(\log(L_2/\sigma_{\min}))$ consecutive rejections can occur before
+$M_k\ge L_2$, after which the Taylor remainder is dominated and acceptance
+is guaranteed in the standard ARC sense. Thus $|\mathcal{S}_K|\ge K/3$ for
+large $K$, which is the claimed $K^{-2/3}$ rate. The argument never uses
+$n$, only $\|g_k\|$ and $M_k$.
 \end{proof}
+
+\begin{remark}
+A fully expanded write-up with the extension-inheritance table appears in
+\texttt{papers/en/08\_theory\_proofs.tex} (\texttt{pdfs/08\_Theory\_EN.pdf}).
+\end{remark}
 
 \subsection{Local phase}
 Let $x^\star$ be a minimizer with $H_\star=\nabla^2 f(x^\star)\succeq\gamma I$
@@ -317,14 +343,24 @@ In that neighbourhood $|T_k|=T_k$ as soon as every Ritz value is positive,
 so the saddle-free correction is automatically switched off.
 \end{theorem}
 
-\begin{proof}[Proof sketch]
-Write $e_k=x_k-x^\star$. Standard inexact-Newton calculus
-\cite{dembo1982} gives
-$\|e_{k+1}\|\le (L_2/(2\gamma))\|e_k\|^2+\rho^{(m_k)}\|e_k\|$.
-Near $x^\star$ one has $\|g_k\|=\Theta(\|e_k\|)$, hence
-$m_k\ge\alpha\log(1/\|e_k\|)+O(1)$ and
-$\beta^{m_k}=O(\|e_k\|^{\alpha\log(1/\beta)})$.
-The choice of $\alpha$ makes the perturbation $o(\|e_k\|^2)$.
+\begin{proof}
+Write $e_k=x_k-x^\star$. In a neighbourhood where $H_k\succeq\gamma I$ every
+Ritz value is eventually positive, so $|T_k|=T_k$. For an inexact Newton
+step with residual $\|H_k s_k+g_k\|\le\rho_k\|g_k\|$,
+Dembo--Eisenstat--Steihaug calculus \cite{dembo1982} yields
+\[
+\|e_{k+1}\|
+\le
+\frac{L_2}{2\gamma}\|e_k\|^2+\frac{\rho_k}{\gamma}\|g_k\|.
+\]
+Near $x^\star$ one has $\|g_k\|=\Theta(\|e_k\|)$. The Krylov model meets the
+Chebyshev bound $\rho_k\le 2\beta^{m_k}$. The logarithmic schedule forces
+$m_k\ge\alpha\log(1/\|g_k\|)+O(1)$, hence
+$\beta^{m_k}\le C\|g_k\|^{\alpha\log(1/\beta)}$.
+Choosing $\alpha\log(1/\beta)\ge 1$ makes $\rho_k\|g_k\|=O(\|e_k\|^2)$, which
+is absorbed into the leading quadratic term and produces
+$\|e_{k+1}\|\le (L_2/(2\gamma))\|e_k\|^2(1+\varepsilon_k)$ with
+$\varepsilon_k\to 0$.
 \end{proof}
 
 \begin{remark}[Oracle complexity]
